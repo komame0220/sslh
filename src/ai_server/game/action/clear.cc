@@ -37,6 +37,7 @@ if(rot_th <
 }
 */
 
+#include <iostream> //22.6.29
 #include <cmath>
 #include "clear.h"
 #include "ai_server/util/math/angle.h"
