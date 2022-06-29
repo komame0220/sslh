@@ -9,3 +9,4 @@ std::tuple<double, double, double> walk_forwardup::execute() {
 }
 
 } // namespace ai_server::model::motion
+

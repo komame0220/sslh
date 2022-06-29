@@ -23,6 +23,8 @@
 
 #include <gtkmm.h>
 
+#include "ai_server/game/action/clear.h"   // wm20220621 
+
 #ifdef AI_SERVER_HAS_NNABLA_EXT_CUDA
 #include <nbla/cuda/cudnn/init.hpp>
 #include <nbla/cuda/init.hpp>
@@ -281,6 +283,7 @@ private:
 
     model::refbox refbox{};
     std::unique_ptr<game::captain::base> captain{};
+    std::unique_ptr<game::action::base> action{};    //m ***********************
 
     std::chrono::steady_clock::time_point prev_time{};
 
@@ -310,6 +313,7 @@ private:
           }
         }
 
+/*    //  wm20220621
         if (!captain || need_reset_) {
           captain = std::make_unique<game::captain::first>(
               ctx, refbox, std::set(active_robots_.cbegin(), active_robots_.cend()));
@@ -323,6 +327,23 @@ private:
           auto command = action->execute();
           driver_.update_command(action->id(), command);
         }
+*/
+
+// action only  wm 20220621
+        if (!action || need_reset_) {    // || OR
+       
+         //action      = std::make_unique<game::action::goal_keep>(ctx, 0);
+         //action      = std::make_unique<game::action::get_ball>(ctx, 1);
+         action      = std::make_unique<game::action::clear>(ctx, 0);
+
+          need_reset_ = false;
+          l_.info("action resetted");
+        }
+
+        auto command = action->execute();
+        driver_.update_command(action->id(), command);
+
+        // action only
 
         prev_time = current_time;
       } catch (const std::exception& e) {
